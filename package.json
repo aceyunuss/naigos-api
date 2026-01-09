@@ -1,0 +1,16 @@
+{
+  "name": "naigos-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cron": "^4.4.0",
+    "dotenv": "^17.2.3",
+    "nodemon": "^3.1.11"
+  }
+}
