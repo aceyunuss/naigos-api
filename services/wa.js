@@ -34,4 +34,20 @@ const send = async (msg) => {
   }
 };
 
-module.exports = { send };
+const status = async () => {
+  try {
+    const form = new FormData();
+    form.append("target", "085771568490");
+    form.append("message", "Connect");
+    form.append("countryCode", "62");
+
+    // const res = await fetch(waHost, { method: "POST", headers: { Authorization: waToken }, body: form });
+    // const { status, reason } = await res.json();
+
+    console.log(status ? "[WA] service ready" : `[WA] error : ${reason}`);
+  } catch (err) {
+    console.log("[WA] error :", err.message || err);
+  }
+};
+
+module.exports = { status, send };

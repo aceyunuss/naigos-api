@@ -34,4 +34,14 @@ const get = async (endpoint) => {
   }
 };
 
-module.exports = { get };
+const status = async () => {
+  try {
+    const res = await fetch(apiHost + "objects/hoststatus?apikey=" + apiKey);
+    const data = await res.json();
+    console.log(data?.error ? `[NAIGO] error : ${data.error}` : "[NAIGO] service ready");
+  } catch (err) {
+    console.log("[NAIGO] error:", err.message || err);
+  }
+};
+
+module.exports = { get, status };

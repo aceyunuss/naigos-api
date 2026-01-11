@@ -1,8 +1,8 @@
-const api_naigo = require("../services/api_naigo");
+const naigo = require("../services/naigo");
 const wa = require("../services/wa");
 
 const checkHost = async () => {
-  const status = await api_naigo.get("objects/hoststatus");
+  const status = await naigo.get("objects/hoststatus");
   const down = [];
 
   for (const e of status.data.hoststatus) {
