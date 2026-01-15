@@ -41,8 +41,8 @@ const status = async () => {
     form.append("message", "Connect");
     form.append("countryCode", "62");
 
-    // const res = await fetch(waHost, { method: "POST", headers: { Authorization: waToken }, body: form });
-    // const { status, reason } = await res.json();
+    const res = await fetch(waHost, { method: "POST", headers: { Authorization: waToken }, body: form });
+    const { status, reason } = await res.json();
 
     console.log(status ? "[WA] service ready" : `[WA] error : ${reason}`);
   } catch (err) {

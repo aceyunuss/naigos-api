@@ -1,35 +1,34 @@
 const naigo = require("../services/naigo");
 const wa = require("../services/wa");
+const redis = require("../services/redis");
 
 const checkHost = async () => {
   const status = await naigo.get("objects/hoststatus");
-  const down = [];
+  const prevDown = await redis.getHostNotOkDetail();
+  const prevUp = await redis.getHostOkDetail();
+  const newStatus = await redis.storeData(prevDown.data, prevUp.data, status.data.hoststatus);
 
-  for (const e of status.data.hoststatus) {
-    if (e.output.includes("OK")) continue;
-    down.push(parseNotif(down, e));
+  if (newStatus.data.down.length > 0 || newStatus.data.up.length > 0) {
+    const alertMsg = parseNotif([...newStatus.data.down, ...newStatus.data.up]);
+    await wa.send(alertMsg);
   }
-
-  if (down.length > 0) notifyDown(down);
 };
 
-const parseNotif = (prev, data) => {
-  const head = prev.length == 0 ? "🚨 PERINGATAN 🚨" : "";
-  const status = data.output.split(" ")[0];
+const parseNotif = (data) => {
+  let msg = "🚨 PERINGATAN 🚨";
 
-  return `${head}
+  data.forEach((e) => {
+    const status = (e.output || "").split(" ")[0].toUpperCase();
+    const btn = status == "OK" ? "🟢" : "🔴";
 
-⚠️  Status         : ${status}
-🖥️  Host            : ${data.host_name}
-🌐  IP                 : ${data.address}
-⏰  Last Check : ${data.last_check}
-📝  Message     : ${data.output}
-`;
-};
+    msg += `
 
-const notifyDown = async (message) => {
-  const msg = message.join("");  
-  await wa.send(msg);
+${btn} [${e.last_check}]
+${e.host_name} (${e.address})
+${e.output}`;
+  });
+
+  return msg;
 };
 
 const bip = async () => {
